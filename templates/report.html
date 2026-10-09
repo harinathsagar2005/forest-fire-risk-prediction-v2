@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Project Outcome Report | Team 27 - Vardhaman College of Engineering</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            body { background: white !important; color: black !important; font-size: 11pt; }
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            .shadow-xl, .shadow-2xl { box-shadow: none !important; }
+            .border-slate-800 { border-color: #cbd5e1 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-900 font-serif antialiased py-8 px-4 sm:px-8">
+
+    <!-- Print Control Bar -->
+    <div class="max-w-4xl mx-auto mb-6 no-print flex items-center justify-between bg-slate-900 text-white p-4 rounded-xl shadow-lg">
+        <div>
+            <h2 class="text-sm font-bold flex items-center gap-2">
+                <i class="fa-solid fa-file-pdf text-orange-400"></i>
+                Official Mini Project Outcome Report (A. Y. 2026-2027)
+            </h2>
+            <p class="text-xs text-slate-400">Team 27 &bull; Department of CSE (AI&ML) &bull; Vardhaman College of Engineering</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="/" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-sans text-slate-200 transition">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Back to Dashboard
+            </a>
+            <button onclick="window.print()" class="px-4 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-xs font-sans font-bold text-white transition flex items-center gap-1.5">
+                <i class="fa-solid fa-print"></i> Print / Save as PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Report Document Paper -->
+    <div class="max-w-4xl mx-auto bg-white p-8 sm:p-14 shadow-2xl rounded-2xl border border-slate-300">
+        
+        <!-- Header & Institution Title -->
+        <div class="text-center border-b-2 border-slate-900 pb-6 mb-8">
+            <div class="inline-block p-2 rounded-full border border-slate-400 mb-2">
+                <span class="font-sans font-black text-xl text-blue-900 tracking-wider">VCE</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-black uppercase tracking-wide text-slate-900">
+                Vardhaman College of Engineering
+            </h1>
+            <p class="text-xs font-sans font-semibold text-slate-600 uppercase tracking-wider">
+                (An Autonomous Institution)
+            </p>
+            <p class="text-[11px] font-sans text-slate-600 mt-1 max-w-2xl mx-auto leading-relaxed">
+                Affiliated to JNTUH, Approved by AICTE, Accredited by NAAC with 'A++' Grade, ISO 9001:2015 Certified<br>
+                Kacharam, Shamshabad, Hyderabad – 501218, Telangana, India
+            </p>
+            <div class="mt-3 inline-block bg-slate-100 px-4 py-1 rounded border border-slate-300">
+                <h2 class="text-xs sm:text-sm font-sans font-bold text-slate-800 uppercase tracking-widest">
+                    Department of Computer Science and Engineering (AI&ML)
+                </h2>
+            </div>
+            <h3 class="text-base sm:text-lg font-sans font-bold text-orange-700 mt-4 underline decoration-2 underline-offset-4">
+                MINI PROJECT OUTCOME & COMPLETION REPORT (A. Y. 2026-2027)
+            </h3>
+        </div>
+
+        <!-- Section 1 & 2: Project Metadata -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 font-sans text-xs bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <div class="space-y-1.5">
+                <p><strong>1. Project Title:</strong> <span class="text-slate-900 font-bold block text-sm text-orange-900">Forest Fire Risk Prediction Using Machine Learning</span></p>
+                <p><strong>2. Team Number:</strong> <span class="font-bold">27</span></p>
+                <p><strong>Team Members:</strong></p>
+                <ul class="list-disc list-inside ml-2 text-slate-700 space-y-0.5">
+                    <li><strong>G. Harinath</strong> – Roll No: <span class="font-mono font-semibold">24881A6619</span></li>
+                    <li><strong>S. Anirudh</strong> – Roll No: <span class="font-mono font-semibold">24881A6649</span></li>
+                </ul>
+            </div>
+            <div class="space-y-1.5 border-t md:border-t-0 md:border-l border-slate-200 pt-3 md:pt-0 md:pl-6">
+                <p><strong>3. Guide Name & Designation:</strong></p>
+                <p class="text-sm font-bold text-slate-800">Mrs. D Sandhya Rani</p>
+                <p class="text-slate-600">Assistant Professor</p>
+                <p class="text-slate-600">Department of CSE (AI&ML)</p>
+                <p class="pt-2"><strong>Academic Year:</strong> 2026-2027</p>
+                <p><strong>Bloom's Taxonomy Level:</strong> <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Apply</span></p>
+            </div>
+        </div>
+
+        <!-- Section 4: Problem Statement -->
+        <div class="mb-8">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                4. Problem Statement
+            </h3>
+            <p class="text-xs text-justify leading-relaxed text-slate-800">
+                Forest fires cause severe ecological, environmental, and economic damage. Existing prediction methods often fail to accurately identify fire-prone regions because of the complex relationships among weather, vegetation, terrain, and human activities. This project develops a machine learning-based forest fire risk prediction system that analyzes historical and real-time environmental factors such as temperature, humidity, rainfall, wind speed, vegetation, and terrain data to predict high-risk areas and support early warning and disaster management. Multiple machine learning algorithms are trained and evaluated to identify the most accurate prediction model.
+            </p>
+        </div>
+
+        <!-- Section 5: Objectives -->
+        <div class="mb-8">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                5. Project Objectives
+            </h3>
+            <ul class="text-xs text-slate-800 space-y-2">
+                <li class="flex items-start gap-2">
+                    <span class="font-sans font-bold text-orange-600 mt-0.5">&bull;</span>
+                    <span><strong>Objective 1:</strong> To develop a machine learning model to predict forest fire risk using historical fire and environmental data.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="font-sans font-bold text-orange-600 mt-0.5">&bull;</span>
+                    <span><strong>Objective 2:</strong> To compare Logistic Regression, Random Forest, and Support Vector Machine models to identify the best-performing algorithm.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="font-sans font-bold text-orange-600 mt-0.5">&bull;</span>
+                    <span><strong>Objective 3:</strong> To generate forest fire risk maps to support early warning, resource allocation, and disaster prevention.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section 6: Abstract -->
+        <div class="mb-8">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                6. Abstract
+            </h3>
+            <p class="text-xs text-justify leading-relaxed text-slate-800 mb-2">
+                Forest fires cause significant damage to ecosystems, biodiversity, and human life, making early prediction essential. This project presents a machine learning-based framework for predicting forest fire risk using environmental and geographical data. The system analyzes historical fire records along with meteorological parameters such as temperature, humidity, precipitation, and atmospheric pressure. It also considers vegetation and terrain features including NDVI, elevation, slope, and distance to roads. Data preprocessing techniques such as data cleaning, normalization, and feature selection are applied to improve prediction accuracy and enhance model performance. Three machine learning algorithms—Logistic Regression, Random Forest, and Support Vector Machine (SVM) are implemented and compared to identify the most effective prediction model. Among these, Random Forest achieves the highest prediction accuracy (95.0%) and effectively identifies forest fire risk levels. The proposed model classifies forest regions into low, medium-, and high-risk categories based on the analyzed environmental conditions. The framework is designed to be scalable and can be adapted to different forest regions by incorporating region-specific environmental and geographical data, making it suitable for real-world applications. The prediction results support forest authorities in early warning, efficient resource allocation, wildfire prevention, and emergency response planning. By providing accurate and timely fire-risk assessments, the proposed system helps reduce environmental and economic losses while promoting sustainable forest management, ecological conservation, and long-term disaster preparedness.
+            </p>
+            <p class="text-[11px] font-sans text-slate-600">
+                <strong>Keywords:</strong> Forest Fire, Machine Learning, Random Forest, SVM, Logistic Regression, NDVI, SHAP
+            </p>
+        </div>
+
+        <!-- Section 7: Experimental Outcomes & Model Comparison -->
+        <div class="mb-8 page-break">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                7. Experimental Outcomes & Performance Evaluation
+            </h3>
+            <p class="text-xs text-slate-700 mb-4 leading-relaxed">
+                The models were trained on 3,000 multi-spectral environmental and topographical records using an 80:20 stratified train-test split. The evaluation metrics demonstrate that the non-linear ensemble nature of Random Forest significantly outperforms both linear hyperplanes (Logistic Regression) and kernel projections (SVM).
+            </p>
+
+            <!-- Comparison Table -->
+            <div class="overflow-x-auto mb-6">
+                <table class="w-full text-left font-sans text-xs border border-slate-300">
+                    <thead class="bg-slate-100 text-slate-800 uppercase text-[10px] border-b border-slate-300">
+                        <tr>
+                            <th class="py-2.5 px-3">Algorithm</th>
+                            <th class="py-2.5 px-3">Accuracy (%)</th>
+                            <th class="py-2.5 px-3">Precision (%)</th>
+                            <th class="py-2.5 px-3">Recall (%)</th>
+                            <th class="py-2.5 px-3">F1-Score (%)</th>
+                            <th class="py-2.5 px-3">ROC-AUC</th>
+                            <th class="py-2.5 px-3">Ranking</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr class="bg-emerald-50/70 font-bold text-emerald-950">
+                            <td class="py-2.5 px-3">Random Forest (Ensemble)</td>
+                            <td class="py-2.5 px-3 font-mono text-emerald-700">95.00%</td>
+                            <td class="py-2.5 px-3 font-mono">94.93%</td>
+                            <td class="py-2.5 px-3 font-mono">95.00%</td>
+                            <td class="py-2.5 px-3 font-mono">94.83%</td>
+                            <td class="py-2.5 px-3 font-mono">0.9564</td>
+                            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-800 text-[10px]">Rank 1 (Best)</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-2.5 px-3 font-medium text-slate-800">Support Vector Machine (RBF)</td>
+                            <td class="py-2.5 px-3 font-mono text-purple-700 font-bold">86.50%</td>
+                            <td class="py-2.5 px-3 font-mono">85.96%</td>
+                            <td class="py-2.5 px-3 font-mono">86.50%</td>
+                            <td class="py-2.5 px-3 font-mono">85.98%</td>
+                            <td class="py-2.5 px-3 font-mono">0.9213</td>
+                            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px]">Rank 2</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-2.5 px-3 font-medium text-slate-800">Logistic Regression (L2)</td>
+                            <td class="py-2.5 px-3 font-mono text-blue-700 font-bold">79.50%</td>
+                            <td class="py-2.5 px-3 font-mono">77.53%</td>
+                            <td class="py-2.5 px-3 font-mono">79.50%</td>
+                            <td class="py-2.5 px-3 font-mono">77.48%</td>
+                            <td class="py-2.5 px-3 font-mono">0.8584</td>
+                            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Rank 3</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Visualization Plots Embedded -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+                <div class="p-2 border border-slate-200 rounded-lg text-center">
+                    <img src="/static/images/model_comparison.png" alt="Algorithm Comparison Chart" class="w-full h-auto rounded">
+                    <p class="font-sans text-[10px] text-slate-500 mt-1">Figure 1: Multi-metric algorithm performance comparison</p>
+                </div>
+                <div class="p-2 border border-slate-200 rounded-lg text-center">
+                    <img src="/static/images/feature_importance.png" alt="Feature Importance Chart" class="w-full h-auto rounded">
+                    <p class="font-sans text-[10px] text-slate-500 mt-1">Figure 2: Gini feature importance distribution (Random Forest)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 8: Explainable AI & SHAP -->
+        <div class="mb-8">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                8. Explainable AI (XAI) & SHAP Analysis
+            </h3>
+            <p class="text-xs text-justify leading-relaxed text-slate-800 mb-3">
+                To eliminate the "black-box" dilemma in mission-critical disaster management, SHAP (SHapley Additive exPlanations) using TreeExplainer was integrated. The results indicate that:
+            </p>
+            <ul class="text-xs text-slate-800 space-y-1.5 ml-4 list-disc">
+                <li><strong>Temperature and Relative Humidity</strong> accounted for over <strong>54%</strong> of total predictive importance, directly validating fire meteorology physics where vapor pressure deficits govern fine fuel desiccation.</li>
+                <li><strong>Wind Speed</strong> functions as an active multiplier, accelerating rate of spread and ember transport.</li>
+                <li><strong>NDVI and Slope</strong> provide structural terrain influence, showing that slopes > 18° accelerate fire spread uphill due to convective pre-heating.</li>
+            </ul>
+        </div>
+
+        <!-- Section 9: GIS Risk Mapping & Early Warning Deliverables -->
+        <div class="mb-8">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                9. GIS Risk Mapping & Early Warning System Deliverables
+            </h3>
+            <p class="text-xs text-justify leading-relaxed text-slate-800 mb-3">
+                Pursuant to Objective 3, an interactive GIS Mapping dashboard was deployed using Leaflet.js with multi-layer geospatial feeds:
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-sans text-xs">
+                <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <h4 class="font-bold text-red-900 mb-1">High Risk (Tier 1)</h4>
+                    <p class="text-[11px] text-red-700 leading-normal">
+                        Siren alarm activation, pre-positioning water tankers, drone thermal monitoring, and tourist trail closures.
+                    </p>
+                </div>
+                <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <h4 class="font-bold text-amber-900 mb-1">Medium Risk (Tier 2)</h4>
+                    <p class="text-[11px] text-amber-700 leading-normal">
+                        Elevated lookout tower observation, fire break inspections, and community SMS advisories.
+                    </p>
+                </div>
+                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <h4 class="font-bold text-emerald-900 mb-1">Low Risk (Tier 3)</h4>
+                    <p class="text-[11px] text-emerald-700 leading-normal">
+                        Routine telemetry health pings and standard conservation operating routines.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 10: Generative AI & LLM Wildfire Copilot -->
+        <div class="mb-8">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                10. Generative AI: LLM Wildfire Incident Copilot & Bilingual Advisory
+            </h3>
+            <p class="text-xs text-justify leading-relaxed text-slate-800 mb-3">
+                To bridge the operational gap between raw ML predictions and on-the-ground disaster intervention, an advanced <strong>Large Language Model (LLM) Incident Copilot</strong> module was implemented. Leveraging dual-mode execution (Google Gemini 1.5 Flash API + built-in zero-latency domain knowledge engine), the module automatically transforms multi-sensor telemetry into:
+            </p>
+            <ul class="text-xs text-slate-800 space-y-1.5 ml-4 list-disc">
+                <li><strong>Executive Disaster Briefings:</strong> Formal situational summaries detailing fuel moisture depletion, convective flame vectors, and terrain chimney acceleration for the District Disaster Management Authority (DDMA).</li>
+                <li><strong>Tactical Asset Deployment Plans:</strong> Automated calculation of required rapid intervention water tenders, FLIR thermal surveillance drones, and mechanical firebreak clearance crews.</li>
+                <li><strong>Bilingual Emergency Broadcasts:</strong> Formatted emergency text alerts generated in both <strong>English</strong> and <strong>Telugu</strong> (for rural communities and panchayats bordering the Amrabad / Nallamala forest reserves).</li>
+                <li><strong>Interactive Officer Chatbot:</strong> A real-time conversational agent capable of addressing viva inquiries, explaining feature contributions, and providing step-by-step Standard Operating Procedures (SOPs).</li>
+            </ul>
+        </div>
+
+        <!-- Section 11: SDG & OBE Mapping -->
+        <div class="mb-8">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                11. SDG & OBE Alignment Summary
+            </h3>
+            <p class="text-xs text-slate-700 leading-relaxed mb-2">
+                This project comprehensively addresses <strong>6 UN Sustainable Development Goals</strong> (SDG 4, 9, 11, 13, 15, 17) and maps directly to <strong>Program Outcomes PO1, PO2, PO3, PO5, PO7, PO8, PO11</strong> and <strong>Program Specific Outcomes PSO1, PSO2</strong>, adhering to AICTE and NBA quality standards at Bloom's Taxonomy Level: <em>Apply</em>.
+            </p>
+        </div>
+
+        <!-- Section 12: References (Exact Citations from Page 7) -->
+        <div class="mb-12">
+            <h3 class="font-sans font-bold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-3 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-orange-600 inline-block rounded-sm"></span>
+                12. References
+            </h3>
+            <ol class="text-[10px] text-slate-700 space-y-1.5 list-decimal list-inside leading-relaxed font-sans">
+                <li>H. Li, J. Zhang, J. Yang, C. Teng, K. Luo, and K. Sun, "A Forest Fire Risk Prediction Framework Based on Machine Learning Models in the Greater Khingan," <em>Fire</em>, vol. 9, no. 6, Art. no. 256, Jun. 2026, doi: 10.3390/fire9060256.</li>
+                <li>C. Wang, H. Liu, Y. Xu, and F. Zhang, "A Forest Fire Prediction Framework Based on Multiple Machine Learning Models," <em>Forests</em>, vol. 16, no. 3, Art. no. 329, 2025.</li>
+                <li>R. Sheriff, M. S. Meer, R. W. Aslam, and Y. Said, "Machine Learning-Based Forest Fire Susceptibility Mapping Using Random Forest and CART Models," <em>Rangeland Ecology & Management</em>, vol. 102, pp. 96-109, 2025.</li>
+                <li>U. Durlević, V. Ilić, and A. Valjarević, "Wildfire Susceptibility Mapping Using Deep Learning and Machine Learning Models Based on Multi-Sensor Satellite Data Fusion: A Case Study of Serbia," <em>Fire</em>, vol. 8, no. 10, Art. no. 407, 2025.</li>
+                <li>Z. Abohaia, A. Elkhouly, M. E. Barachi, and O. Al-Khatib, "Regional Prediction of Fire Characteristics Using Machine Learning in Australia," <em>Fire</em>, vol. 8, no. 8, Art. no. 330, 2025.</li>
+                <li>Yuan, S.; Wang, M.; Shu, L.; Ma, Q.; Song, J.; Xiao, F.; Zhou, X.; Wang, J. "Characteristics of Lightning Ignition and Spatial–Temporal Wildfire Dynamics," 2025.</li>
+                <li>Y. Wang, X. Liu, H. Jin, X. Zeng, X. Zhang, H. Kang, S. Kang, Y. Li, and Q. Zhang, "Climate-Induced Permafrost Degradation Exerts Species-Specific Impacts on Pine and Larch Growth in the Da Xing'anling Mountains, Northeast China," <em>Agricultural and Forest Meteorology</em>, vol. 372, Art. no. 110665, 2025.</li>
+            </ol>
+        </div>
+
+        <!-- Section 12: Signatures Block -->
+        <div class="mt-14 pt-8 border-t-2 border-slate-900 grid grid-cols-3 gap-6 text-center font-sans text-xs">
+            <div>
+                <div class="h-14 flex items-end justify-center">
+                    <span class="italic text-slate-400 font-serif">[Signed]</span>
+                </div>
+                <div class="border-t border-slate-800 pt-1 font-bold text-slate-800">
+                    Signature of Supervisor<br>
+                    <span class="font-normal text-[11px] text-slate-600">(Mrs. D Sandhya Rani)</span>
+                </div>
+            </div>
+            <div>
+                <div class="h-14 flex items-end justify-center">
+                    <span class="italic text-slate-400 font-serif">[Verified]</span>
+                </div>
+                <div class="border-t border-slate-800 pt-1 font-bold text-slate-800">
+                    Signature of Coordinator<br>
+                    <span class="font-normal text-[11px] text-slate-600">(Mini Project In-charge)</span>
+                </div>
+            </div>
+            <div>
+                <div class="h-14 flex items-end justify-center">
+                    <span class="italic text-slate-400 font-serif">[Approved]</span>
+                </div>
+                <div class="border-t border-slate-800 pt-1 font-bold text-slate-800">
+                    Signature of HOD<br>
+                    <span class="font-normal text-[11px] text-slate-600">(Dept of CSE - AI&ML)</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

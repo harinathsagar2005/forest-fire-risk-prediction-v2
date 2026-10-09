@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Fire Risk Prediction | Vardhaman College of Engineering</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom styling -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-orange-500 selection:text-white">
+
+    <!-- Header / College Branding -->
+    <header class="bg-slate-950/90 border-b border-slate-800 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-600 via-orange-600 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/20 text-white font-bold text-2xl">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800/80">NAAC A++ Autonomous</span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800/80">Team #27</span>
+                        </div>
+                        <h1 class="text-base sm:text-lg font-bold text-white tracking-tight">
+                            Forest Fire Risk Prediction System
+                        </h1>
+                        <p class="text-xs text-slate-400">
+                            Vardhaman College of Engineering | Dept of CSE (AI&ML) | A.Y. 2026-2027
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Team & Guide Info Pill -->
+                <div class="flex items-center space-x-3 text-xs bg-slate-900/90 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <div class="text-right border-r border-slate-700 pr-3 hidden sm:block">
+                        <p class="text-slate-400">Students:</p>
+                        <p class="font-medium text-slate-200">G. Harinath (6619) &bull; S. Anirudh (6649)</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400">Guide:</p>
+                        <p class="font-medium text-amber-400">Mrs. D Sandhya Rani, Asst. Prof.</p>
+                    </div>
+                    <a href="/report" target="_blank" class="ml-2 px-2.5 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-medium flex items-center space-x-1 transition shadow-sm">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>Outcome Report</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex space-x-1 sm:space-x-2 mt-3 overflow-x-auto pb-1 text-sm scrollbar-none">
+                <button onclick="switchTab('tab-predictor')" id="btn-tab-predictor" class="tab-btn active px-3.5 py-2 rounded-lg font-medium flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-calculator text-orange-400"></i>
+                    <span>Risk Predictor</span>
+                </button>
+                <button onclick="switchTab('tab-llm')" id="btn-tab-llm" class="tab-btn px-3.5 py-2 rounded-lg font-medium flex items-center space-x-2 transition bg-gradient-to-r from-pink-950/40 to-purple-950/40 border border-pink-700/40">
+                    <i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i>
+                    <span>AI Copilot (LLM)</span>
+                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-pink-600 text-white font-bold ml-1">NEW</span>
+                </button>
+                <button onclick="switchTab('tab-gis')" id="btn-tab-gis" class="tab-btn px-3.5 py-2 rounded-lg font-medium flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-map-location-dot text-emerald-400"></i>
+                    <span>GIS Risk Map & Alerts</span>
+                </button>
+                <button onclick="switchTab('tab-models')" id="btn-tab-models" class="tab-btn px-3.5 py-2 rounded-lg font-medium flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-chart-line text-blue-400"></i>
+                    <span>Model Comparison (RF / SVM / LR)</span>
+                </button>
+                <button onclick="switchTab('tab-shap')" id="btn-tab-shap" class="tab-btn px-3.5 py-2 rounded-lg font-medium flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-brain text-purple-400"></i>
+                    <span>SHAP & Explainability</span>
+                </button>
+                <button onclick="switchTab('tab-dataset')" id="btn-tab-dataset" class="tab-btn px-3.5 py-2 rounded-lg font-medium flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-database text-cyan-400"></i>
+                    <span>Dataset Explorer</span>
+                </button>
+                <button onclick="switchTab('tab-about')" id="btn-tab-about" class="tab-btn px-3.5 py-2 rounded-lg font-medium flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-graduation-cap text-amber-400"></i>
+                    <span>Project Overview & OBE</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: INTERACTIVE RISK PREDICTOR -->
+        <!-- ========================================== -->
+        <div id="tab-predictor" class="tab-content">
+            <!-- Alert Banner / Preset Buttons -->
+            <div class="mb-6 bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                        Interactive Forest Fire Hazard Predictor
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        Input meteorological & topographical sensor values or load pre-configured real-world climate scenarios:
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="applyPreset('extreme_summer')" class="px-3 py-1.5 rounded-lg bg-red-950/80 hover:bg-red-900 border border-red-700/60 text-xs text-red-200 font-medium transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-fire text-red-400"></i> Summer Heatwave
+                    </button>
+                    <button onclick="applyPreset('monsoon')" class="px-3 py-1.5 rounded-lg bg-blue-950/80 hover:bg-blue-900 border border-blue-700/60 text-xs text-blue-200 font-medium transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-cloud-showers-heavy text-blue-400"></i> Monsoon Downpour
+                    </button>
+                    <button onclick="applyPreset('moderate_spring')" class="px-3 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-xs text-amber-200 font-medium transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-sun text-amber-400"></i> Dry Spring
+                    </button>
+                    <button onclick="applyPreset('mountain_ridge')" class="px-3 py-1.5 rounded-lg bg-purple-950/80 hover:bg-purple-900 border border-purple-700/60 text-xs text-purple-200 font-medium transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-mountain text-purple-400"></i> Mountain Ridge
+                    </button>
+                </div>
+            </div>
+
+            <!-- Two-Column Form & Results Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left: Form Controls (7 Columns) -->
+                <div class="lg:col-span-7 bg-slate-950/70 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-5">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="font-semibold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-orange-400"></i>
+                            Environmental & Geographical Parameters
+                        </h3>
+                        <!-- Model Selection -->
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs text-slate-400">Active Model:</label>
+                            <select id="model-select" class="bg-slate-900 border border-slate-700 text-xs text-amber-300 font-semibold rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-orange-500 focus:outline-none">
+                                <option value="Random Forest" selected>Random Forest (95.0% - Best)</option>
+                                <option value="Support Vector Machine">Support Vector Machine (86.5%)</option>
+                                <option value="Logistic Regression">Logistic Regression (79.5%)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Parameter Inputs Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Temperature -->
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span class="text-slate-300 font-medium"><i class="fa-solid fa-temperature-three-quarters text-red-400 mr-1.5"></i>Temperature</span>
+                                <span id="val-temp" class="text-amber-400 font-mono font-bold">34.5 °C</span>
+                            </div>
+                            <input type="range" id="input-temp" min="10" max="48" step="0.5" value="34.5" oninput="updateVal('temp', '°C')" class="w-full accent-orange-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                                <span>10°C (Cold)</span><span>48°C (Extreme)</span>
+                            </div>
+                        </div>
+
+                        <!-- Relative Humidity -->
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span class="text-slate-300 font-medium"><i class="fa-solid fa-droplet text-blue-400 mr-1.5"></i>Relative Humidity</span>
+                                <span id="val-rh" class="text-amber-400 font-mono font-bold">25 %</span>
+                            </div>
+                            <input type="range" id="input-rh" min="8" max="95" step="1" value="25" oninput="updateVal('rh', '%')" class="w-full accent-blue-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                                <span>8% (Arid)</span><span>95% (Saturated)</span>
+                            </div>
+                        </div>
+
+                        <!-- Rainfall -->
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span class="text-slate-300 font-medium"><i class="fa-solid fa-cloud-rain text-cyan-400 mr-1.5"></i>Precipitation / Rain</span>
+                                <span id="val-rain" class="text-amber-400 font-mono font-bold">0.0 mm</span>
+                            </div>
+                            <input type="range" id="input-rain" min="0" max="50" step="0.2" value="0.0" oninput="updateVal('rain', 'mm')" class="w-full accent-cyan-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                                <span>0 mm (Drought)</span><span>50 mm (Heavy)</span>
+                            </div>
+                        </div>
+
+                        <!-- Wind Speed -->
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span class="text-slate-300 font-medium"><i class="fa-solid fa-wind text-teal-400 mr-1.5"></i>Wind Speed</span>
+                                <span id="val-wind" class="text-amber-400 font-mono font-bold">26.0 km/h</span>
+                            </div>
+                            <input type="range" id="input-wind" min="2" max="55" step="0.5" value="26.0" oninput="updateVal('wind', 'km/h')" class="w-full accent-teal-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                                <span>2 km/h (Calm)</span><span>55 km/h (Gale)</span>
+                            </div>
+                        </div>
+
+                        <!-- NDVI -->
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span class="text-slate-300 font-medium"><i class="fa-solid fa-seedling text-emerald-400 mr-1.5"></i>Vegetation Index (NDVI)</span>
+                                <span id="val-ndvi" class="text-amber-400 font-mono font-bold">0.24</span>
+                            </div>
+                            <input type="range" id="input-ndvi" min="0.05" max="0.85" step="0.01" value="0.24" oninput="updateVal('ndvi', '')" class="w-full accent-emerald-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                                <span>0.05 (Dry Fuel)</span><span>0.85 (Moist Canopy)</span>
+                            </div>
+                        </div>
+
+                        <!-- Slope -->
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span class="text-slate-300 font-medium"><i class="fa-solid fa-chart-area text-indigo-400 mr-1.5"></i>Terrain Slope</span>
+                                <span id="val-slope" class="text-amber-400 font-mono font-bold">19.5 °</span>
+                            </div>
+                            <input type="range" id="input-slope" min="0" max="45" step="0.5" value="19.5" oninput="updateVal('slope', '°')" class="w-full accent-indigo-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                                <span>0° (Flat)</span><span>45° (Steep Chimney)</span>
+                            </div>
+                        </div>
+
+                        <!-- Distance to Road -->
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span class="text-slate-300 font-medium"><i class="fa-solid fa-road text-amber-400 mr-1.5"></i>Distance to Road</span>
+                                <span id="val-dist" class="text-amber-400 font-mono font-bold">850 m</span>
+                            </div>
+                            <input type="range" id="input-dist" min="50" max="5000" step="50" value="850" oninput="updateVal('dist', 'm')" class="w-full accent-amber-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                                <span>50m (High Human Access)</span><span>5000m (Isolated)</span>
+                            </div>
+                        </div>
+
+                        <!-- Atmospheric Pressure & Elevation -->
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                    <label class="text-slate-400 block mb-1">Pressure (hPa)</label>
+                                    <input type="number" id="input-pressure" value="1012" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 block mb-1">Elevation (m)</label>
+                                    <input type="number" id="input-elev" value="620" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Predict Trigger Button -->
+                    <button onclick="runPrediction()" id="btn-predict" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-orange-600 via-amber-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold text-base shadow-lg shadow-orange-600/30 transition transform active:scale-[0.99] flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bolt-lightning text-yellow-300"></i>
+                        <span>Calculate Forest Fire Risk Index</span>
+                    </button>
+                </div>
+
+                <!-- Right: Prediction Outcomes & Disaster Plan (5 Columns) -->
+                <div class="lg:col-span-5 space-y-5">
+                    <!-- Main Risk Card -->
+                    <div id="risk-result-card" class="bg-slate-950/80 p-6 rounded-2xl border border-slate-800 shadow-2xl relative overflow-hidden transition-all duration-300">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Predicted Hazard Tier</span>
+                            <span id="result-model-badge" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium">Random Forest</span>
+                        </div>
+
+                        <!-- Risk Indicator & Score -->
+                        <div class="text-center py-3">
+                            <div id="result-status-pill" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-wider bg-red-950/80 text-red-400 border border-red-700/60 mb-3 animate-pulse">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span id="result-class-name">High Risk</span>
+                            </div>
+                            <div class="flex items-baseline justify-center gap-1">
+                                <span id="result-risk-pct" class="text-5xl font-black tracking-tight text-red-500 font-mono">92.4</span>
+                                <span class="text-2xl font-bold text-slate-400">%</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Calculated Wildfire Danger Potential</p>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-900 rounded-full h-3.5 p-0.5 border border-slate-800 mt-2 mb-4">
+                            <div id="result-risk-bar" class="h-full rounded-full bg-gradient-to-r from-emerald-500 via-amber-500 to-red-500 transition-all duration-500" style="width: 92.4%;"></div>
+                        </div>
+
+                        <!-- Probability Distribution Chart -->
+                        <div class="bg-slate-900/70 p-3.5 rounded-xl border border-slate-800/80 mb-4">
+                            <span class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block mb-2">Class Probability Distribution</span>
+                            <div class="space-y-2 text-xs">
+                                <div>
+                                    <div class="flex justify-between text-slate-300 mb-0.5">
+                                        <span><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1"></i>Low Risk</span>
+                                        <span id="prob-low" class="font-mono text-emerald-400">1.2%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-1.5 rounded-full"><div id="prob-bar-low" class="bg-emerald-500 h-1.5 rounded-full" style="width: 1.2%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-slate-300 mb-0.5">
+                                        <span><i class="fa-solid fa-circle text-amber-400 text-[8px] mr-1"></i>Medium Risk</span>
+                                        <span id="prob-med" class="font-mono text-amber-400">7.8%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-1.5 rounded-full"><div id="prob-bar-med" class="bg-amber-500 h-1.5 rounded-full" style="width: 7.8%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-slate-300 mb-0.5">
+                                        <span><i class="fa-solid fa-circle text-red-400 text-[8px] mr-1"></i>High Risk</span>
+                                        <span id="prob-high" class="font-mono text-red-400 font-bold">91.0%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-1.5 rounded-full"><div id="prob-bar-high" class="bg-red-500 h-1.5 rounded-full" style="width: 91.0%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multi-Model Consensus Pill Box -->
+                        <div class="border-t border-slate-800 pt-3">
+                            <span class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block mb-2">Multi-Algorithm Consensus</span>
+                            <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+                                <div class="p-2 rounded bg-slate-900 border border-slate-800">
+                                    <p class="text-slate-400 text-[10px]">Random Forest</p>
+                                    <p id="consensus-rf" class="font-bold text-red-400">High Risk</p>
+                                    <p class="text-[9px] text-slate-500">Acc: 95.0%</p>
+                                </div>
+                                <div class="p-2 rounded bg-slate-900 border border-slate-800">
+                                    <p class="text-slate-400 text-[10px]">SVM (RBF)</p>
+                                    <p id="consensus-svm" class="font-bold text-red-400">High Risk</p>
+                                    <p class="text-[9px] text-slate-500">Acc: 86.5%</p>
+                                </div>
+                                <div class="p-2 rounded bg-slate-900 border border-slate-800">
+                                    <p class="text-slate-400 text-[10px]">Logistic Reg.</p>
+                                    <p id="consensus-lr" class="font-bold text-amber-400">Medium Risk</p>
+                                    <p class="text-[9px] text-slate-500">Acc: 79.5%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LLM Assessment Trigger Button -->
+                        <button onclick="openLlmCopilotWithCurrentState()" class="w-full mt-3 py-2.5 px-3 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-600/30 transition transform active:scale-95">
+                            <i class="fa-solid fa-wand-magic-sparkles text-pink-200"></i>
+                            <span>Generate LLM Incident Brief & Telugu Alert</span>
+                        </button>
+                    </div>
+
+                    <!-- Disaster Response & Recommended Action Protocols -->
+                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-slate-800 shadow-xl">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-shield-halved text-amber-400"></i>
+                            Disaster Management & Action Protocols
+                        </h4>
+                        <div id="sop-content" class="text-xs space-y-2 text-slate-300">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-red-400 mt-0.5 text-[10px]"></i>
+                                <span>Trigger automated siren alarms and notify District Forest Disaster Response Team.</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-red-400 mt-0.5 text-[10px]"></i>
+                                <span>Pre-position rapid water tender tanks at high-vulnerability trail exits.</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-red-400 mt-0.5 text-[10px]"></i>
+                                <span>Enforce temporary visitor access ban along adjacent forested highways.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Contribution Waterfall (Explainable AI per prediction) -->
+            <div class="mt-6 bg-slate-950/70 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-4">
+                    <div>
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-code-branch text-purple-400"></i>
+                            Individual Prediction Explainability (Local Feature Impacts)
+                        </h3>
+                        <p class="text-xs text-slate-400">Quantifies how each environmental factor drove the model decision for the current inputs</p>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 rounded bg-purple-950 text-purple-300 border border-purple-800/80">SHAP / TreeExplainer Logic</span>
+                </div>
+                <div id="feature-contributions-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-xs">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB: AI WILDFIRE COPILOT & LLM ADVISOR -->
+        <!-- ========================================== -->
+        <div id="tab-llm" class="tab-content hidden space-y-6">
+            <!-- Header Bar -->
+            <div class="bg-gradient-to-r from-slate-950 via-purple-950/40 to-slate-950 p-4 rounded-2xl border border-purple-800/80 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i>
+                        AI Wildfire Incident Copilot & LLM Disaster Intelligence Engine
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        Synthesizes ML predictions, microclimate physics, and TreeSHAP feature drivers into tactical incident briefings, evacuation radii, and bilingual emergency dispatches.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleApiKeyInput()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-700 text-xs text-slate-300 font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-key text-amber-400"></i>
+                        <span id="api-key-status-label">Gemini API Key: Optional</span>
+                    </button>
+                    <button onclick="generateLlmIncidentReport()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-purple-600/30 transition">
+                        <i class="fa-solid fa-bolt"></i> Generate Incident Brief
+                    </button>
+                </div>
+            </div>
+
+            <!-- Optional API Key Input Drawer -->
+            <div id="api-key-drawer" class="hidden bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-300 font-semibold"><i class="fa-brands fa-google text-blue-400 mr-1.5"></i>Google Gemini 1.5 API Key (Optional)</span>
+                    <span class="text-[11px] text-slate-500">Leave blank to use the built-in Expert LLM Engine</span>
+                </div>
+                <div class="flex gap-2">
+                    <input type="password" id="gemini-api-key-input" placeholder="Paste your AI Studio GEMINI_API_KEY (AIzaSy...)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none">
+                    <button onclick="saveApiKey()" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition">Save Key</button>
+                </div>
+            </div>
+
+            <!-- Main Two-Column Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left: Executive Incident Briefing (7 cols) -->
+                <div class="lg:col-span-7 bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-file-shield text-pink-400"></i>
+                            Executive Incident Intelligence Report
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <span id="llm-source-badge" class="text-[10px] px-2.5 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800 font-medium">
+                                Ready to Analyze
+                            </span>
+                            <button onclick="copyLlmReport()" title="Copy Full Report" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-850 text-slate-400 hover:text-white transition text-xs">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Target Sector Selector for Report -->
+                    <div class="flex items-center justify-between text-xs bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80">
+                        <span class="text-slate-400">Target Forest Sector:</span>
+                        <select id="llm-sector-select" onchange="generateLlmIncidentReport()" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-amber-300 font-semibold focus:outline-none">
+                            <option value="CURRENT_INPUTS" selected>Current Predictor Telemetry</option>
+                            <option value="ZONE-01">Amrabad Tiger Reserve - Sector Alpha (Telangana)</option>
+                            <option value="ZONE-02">Nallamala Dense Canopy - Sector Bravo</option>
+                            <option value="ZONE-04">Eturnagaram Wildlife Sanctuary (Mulugu)</option>
+                            <option value="ZONE-06">Bandipur Forest Edge - Western Ghats</option>
+                            <option value="ZONE-07">Wayanad Rainforest Biosphere</option>
+                        </select>
+                    </div>
+
+                    <!-- Report Content Render Box -->
+                    <div id="llm-report-content" class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 text-xs text-slate-300 leading-relaxed font-sans min-h-[380px] max-h-[520px] overflow-y-auto space-y-3">
+                        <div class="text-center py-16 text-slate-500">
+                            <i class="fa-solid fa-wand-magic-sparkles text-3xl mb-2 text-purple-500/50"></i>
+                            <p class="font-medium text-slate-400">Click "Generate Incident Brief" to analyze real-time conditions.</p>
+                            <p class="text-[11px] text-slate-600 mt-1">Generates situational awareness, physics analysis, resource allocation, and Telugu alert dispatches.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive Conversational AI Copilot (5 cols) -->
+                <div class="lg:col-span-5 bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[600px]">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-pink-600 to-purple-600 flex items-center justify-center text-white text-xs shadow-md">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-xs">AI Forest Officer Copilot</h3>
+                                <p class="text-[10px] text-emerald-400 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping"></span>
+                                    Online & Ready
+                                </p>
+                            </div>
+                        </div>
+                        <button onclick="clearChat()" class="text-[11px] text-slate-500 hover:text-slate-300 transition">
+                            <i class="fa-solid fa-rotate-right mr-1"></i>Reset
+                        </button>
+                    </div>
+
+                    <!-- Suggested Query Chips -->
+                    <div class="flex flex-wrap gap-1.5 mb-3 text-[10px]">
+                        <button onclick="sendQuickPrompt('Why did Random Forest perform better than SVM and Logistic Regression?')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 transition">
+                            Why RF > SVM?
+                        </button>
+                        <button onclick="sendQuickPrompt('What role does NDVI play in calculating fire susceptibility?')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 transition">
+                            Role of NDVI
+                        </button>
+                        <button onclick="sendQuickPrompt('How does slope affect fire spread rate?')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 transition">
+                            Physics of Slope
+                        </button>
+                        <button onclick="sendQuickPrompt('What are the standard operating procedures when risk exceeds 80%?')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 transition">
+                            SOPs (>80%)
+                        </button>
+                        <button onclick="sendQuickPrompt('Draft an emergency alert SMS for local panchayats in Telugu.')" class="px-2 py-1 rounded-md bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 transition">
+                            తెలుగు హెచ్చరిక
+                        </button>
+                    </div>
+
+                    <!-- Chat Message Thread -->
+                    <div id="llm-chat-stream" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs mb-3">
+                        <div class="flex items-start gap-2.5">
+                            <div class="w-6 h-6 rounded-md bg-purple-900/60 border border-purple-700/60 flex items-center justify-center text-purple-300 text-[10px] shrink-0 mt-0.5">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div class="bg-slate-900 p-3 rounded-2xl rounded-tl-sm border border-slate-800 text-slate-200 leading-relaxed">
+                                <p class="font-semibold text-purple-300 text-[11px] mb-1">AI Wildfire Copilot</p>
+                                Greetings! I am your AI Wildfire Disaster Copilot for Team 27's Forest Fire Risk Prediction System. You can ask me technical questions about our ML models (Random Forest, SVM, LR), feature explainability (TreeSHAP), topographical dynamics, or tactical disaster mitigation protocols.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Bar -->
+                    <form onsubmit="handleChatSubmit(event)" class="flex gap-2 pt-2 border-t border-slate-800">
+                        <input type="text" id="llm-chat-input" placeholder="Ask AI Copilot about fire models, physics, or SOPs..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-200 focus:ring-1 focus:ring-purple-500 focus:outline-none">
+                        <button type="submit" id="btn-chat-send" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center justify-center transition shadow-md shadow-purple-600/20">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: GIS RISK MAP & EARLY WARNINGS -->
+        <!-- ========================================== -->
+        <div id="tab-gis" class="tab-content hidden space-y-6">
+            <!-- GIS Header & Live Alarm Ticker -->
+            <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-earth-americas text-emerald-400"></i>
+                        Interactive Forest Fire GIS Risk Map & Early Warning System
+                    </h2>
+                    <p class="text-xs text-slate-400">
+                        Objective 3: Real-time spatial risk susceptibility mapping across Telangana (Amrabad / Nallamala / Kawal) and South Indian forest ranges.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="triggerSimulatedEmergency()" class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-red-600/30 transition">
+                        <i class="fa-solid fa-triangle-exclamation animate-bounce"></i>
+                        <span>Simulate Climate Anomaly Alert</span>
+                    </button>
+                    <button onclick="resetMapCenter()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition">
+                        <i class="fa-solid fa-crosshairs"></i> Reset View
+                    </button>
+                </div>
+            </div>
+
+            <!-- Map & Side Feed Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Leaflet Map Container (8 Columns) -->
+                <div class="lg:col-span-8 bg-slate-950 p-3 rounded-2xl border border-slate-800 shadow-xl relative">
+                    <!-- Filter Pill overlay -->
+                    <div class="absolute top-6 left-6 z-[1000] bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 text-xs flex items-center gap-2 shadow-lg">
+                        <span class="text-slate-400 font-medium">Risk Filter:</span>
+                        <button onclick="filterMapZones('all')" class="map-filter-btn px-2 py-0.5 rounded bg-slate-800 text-white font-medium">All (8)</button>
+                        <button onclick="filterMapZones('High Risk')" class="map-filter-btn px-2 py-0.5 rounded text-red-400 hover:bg-red-950">High Risk</button>
+                        <button onclick="filterMapZones('Medium Risk')" class="map-filter-btn px-2 py-0.5 rounded text-amber-400 hover:bg-amber-950">Medium</button>
+                        <button onclick="filterMapZones('Low Risk')" class="map-filter-btn px-2 py-0.5 rounded text-emerald-400 hover:bg-emerald-950">Low</button>
+                    </div>
+
+                    <div id="gis-map" class="w-full h-[520px] rounded-xl z-10"></div>
+
+                    <!-- Map Legend -->
+                    <div class="flex flex-wrap items-center justify-between text-xs text-slate-400 mt-3 px-2 pt-1 border-t border-slate-800/80">
+                        <div class="flex items-center space-x-4">
+                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500 inline-block shadow-sm"></span> High Risk (>75%)</span>
+                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block shadow-sm"></span> Medium Risk (35-75%)</span>
+                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block shadow-sm"></span> Low Risk (<35%)</span>
+                        </div>
+                        <span class="text-[11px] text-slate-500"><i class="fa-solid fa-satellite mr-1"></i> Leaflet + OpenStreetMap & ESRI Satellite Layers</span>
+                    </div>
+                </div>
+
+                <!-- Right: Active Monitoring Stations & Telemetry (4 Columns) -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-xl">
+                        <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
+                            <h3 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-tower-broadcast text-cyan-400"></i>
+                                Live Forest Telemetry Stations
+                            </h3>
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">8 Online</span>
+                        </div>
+                        <div id="gis-zone-list" class="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: MODEL COMPARISON (RF vs SVM vs LR) -->
+        <!-- ========================================== -->
+        <div id="tab-models" class="tab-content hidden space-y-6">
+            <!-- Header -->
+            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-code-compare text-blue-400"></i>
+                        Objective 2: Comparative Performance Analysis
+                    </h2>
+                    <p class="text-xs text-slate-400">
+                        Evaluating Random Forest, Support Vector Machine (SVM), and Logistic Regression on 3,000 stratified wildfire records.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs bg-emerald-950/80 px-3.5 py-2 rounded-xl border border-emerald-700/60 text-emerald-300 font-semibold">
+                    <i class="fa-solid fa-trophy text-amber-400"></i>
+                    <span>Best Model: Random Forest (95.0% Accuracy)</span>
+                </div>
+            </div>
+
+            <!-- Comparison Metric Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Random Forest -->
+                <div class="bg-slate-950 p-5 rounded-2xl border-2 border-emerald-600/70 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 text-emerald-950/30 text-8xl font-black">RF</div>
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">Rank #1 (Highest)</span>
+                            <h3 class="text-base font-bold text-white mt-1">Random Forest</h3>
+                        </div>
+                        <i class="fa-solid fa-tree text-emerald-400 text-xl"></i>
+                    </div>
+                    <div class="space-y-2 text-xs border-t border-slate-800/80 pt-3">
+                        <div class="flex justify-between"><span class="text-slate-400">Accuracy:</span><span class="font-bold text-emerald-400 font-mono text-sm">95.00%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Precision:</span><span class="font-bold text-slate-200 font-mono">94.93%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Recall:</span><span class="font-bold text-slate-200 font-mono">95.00%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">F1-Score:</span><span class="font-bold text-slate-200 font-mono">94.83%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">ROC-AUC:</span><span class="font-bold text-emerald-400 font-mono">0.9564</span></div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-800/60 leading-relaxed">
+                        Ensemble of 200 decision trees natively isolates orthogonal non-linear physical thresholds without feature distortion.
+                    </p>
+                </div>
+
+                <!-- Support Vector Machine -->
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 text-purple-950/30 text-8xl font-black">SVM</div>
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-purple-400 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">Rank #2</span>
+                            <h3 class="text-base font-bold text-white mt-1">Support Vector Machine</h3>
+                        </div>
+                        <i class="fa-solid fa-shapes text-purple-400 text-xl"></i>
+                    </div>
+                    <div class="space-y-2 text-xs border-t border-slate-800/80 pt-3">
+                        <div class="flex justify-between"><span class="text-slate-400">Accuracy:</span><span class="font-bold text-purple-400 font-mono text-sm">86.50%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Precision:</span><span class="font-bold text-slate-200 font-mono">85.96%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Recall:</span><span class="font-bold text-slate-200 font-mono">86.50%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">F1-Score:</span><span class="font-bold text-slate-200 font-mono">85.98%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">ROC-AUC:</span><span class="font-bold text-purple-400 font-mono">0.9213</span></div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-800/60 leading-relaxed">
+                        Radial Basis Function (RBF) kernel projects non-linear decision boundaries but incurs marginal confusion along dense borderline zones.
+                    </p>
+                </div>
+
+                <!-- Logistic Regression -->
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 text-blue-950/30 text-8xl font-black">LR</div>
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-blue-400 bg-blue-950 px-2 py-0.5 rounded border border-blue-800">Rank #3</span>
+                            <h3 class="text-base font-bold text-white mt-1">Logistic Regression</h3>
+                        </div>
+                        <i class="fa-solid fa-chart-line text-blue-400 text-xl"></i>
+                    </div>
+                    <div class="space-y-2 text-xs border-t border-slate-800/80 pt-3">
+                        <div class="flex justify-between"><span class="text-slate-400">Accuracy:</span><span class="font-bold text-blue-400 font-mono text-sm">79.50%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Precision:</span><span class="font-bold text-slate-200 font-mono">77.53%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Recall:</span><span class="font-bold text-slate-200 font-mono">79.50%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">F1-Score:</span><span class="font-bold text-slate-200 font-mono">77.48%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">ROC-AUC:</span><span class="font-bold text-blue-400 font-mono">0.8584</span></div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-800/60 leading-relaxed">
+                        Linear hyperplanes struggle with complex compound conditions (e.g., wind exacerbates fire only when humidity is low and rain is zero).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Bar Chart -->
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl">
+                    <h3 class="font-bold text-white text-sm mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-simple text-amber-400"></i>
+                        Multi-Metric Comparative Evaluation
+                    </h3>
+                    <div class="h-64">
+                        <canvas id="chart-comparison"></canvas>
+                    </div>
+                </div>
+
+                <!-- Confusion Matrix for Random Forest -->
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col items-center">
+                    <h3 class="font-bold text-white text-sm mb-2 w-full text-left flex items-center gap-2">
+                        <i class="fa-solid fa-table-cells text-red-400"></i>
+                        Random Forest Confusion Matrix
+                    </h3>
+                    <img src="/static/images/confusion_matrix_rf.png" alt="Confusion Matrix" class="rounded-xl max-h-64 object-contain shadow-lg border border-slate-800">
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: SHAP & EXPLAINABILITY -->
+        <!-- ========================================== -->
+        <div id="tab-shap" class="tab-content hidden space-y-6">
+            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-brain text-purple-400"></i>
+                        Explainable AI: SHAP (SHapley Additive exPlanations) & Feature Importance
+                    </h2>
+                    <p class="text-xs text-slate-400">
+                        Understanding how meteorological, vegetation, and topographic drivers govern forest fire susceptibility predictions.
+                    </p>
+                </div>
+                <span class="text-xs px-3 py-1.5 rounded-lg bg-purple-950 text-purple-300 border border-purple-800 font-semibold">
+                    TreeExplainer (Game Theory)
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Chart on Left (7 cols) -->
+                <div class="lg:col-span-7 bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl">
+                    <h3 class="font-bold text-white text-sm mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-ranking-star text-amber-400"></i>
+                        Global Feature Importance Breakdown
+                    </h3>
+                    <div class="h-72">
+                        <canvas id="chart-feature-importance"></canvas>
+                    </div>
+                </div>
+
+                <!-- Explanation Cards on Right (5 cols) -->
+                <div class="lg:col-span-5 bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-3.5">
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider border-b border-slate-800 pb-2">
+                        Physics & Ecological Interpretability
+                    </h3>
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                            <span class="font-bold text-red-400 block mb-1">1. Temperature & Relative Humidity (Primary Drivers)</span>
+                            <p class="text-slate-400 leading-relaxed">
+                                Drive fuel moisture depletion. As temperatures exceed 30°C and RH falls below 35%, ambient vapor pressure deficit causes fine dead fuels (grasses, leaf litter) to reach flashpoint rapidly.
+                            </p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                            <span class="font-bold text-teal-400 block mb-1">2. Wind Speed (Fire Spread Multiplier)</span>
+                            <p class="text-slate-400 leading-relaxed">
+                                Winds above 20 km/h bend flames forward, preheating unburnt fuels via convective heat transfer and generating spotting ember showers.
+                            </p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                            <span class="font-bold text-emerald-400 block mb-1">3. NDVI & Topographic Slope</span>
+                            <p class="text-slate-400 leading-relaxed">
+                                Low NDVI indicates senescent or cured dry biomass. Steeper slopes produce an upward chimney effect, accelerating wildfire spread rate up to 4x compared to flat terrain.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: DATASET EXPLORER -->
+        <!-- ========================================== -->
+        <div id="tab-dataset" class="tab-content hidden space-y-6">
+            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-database text-cyan-400"></i>
+                        Historical Fire & Environmental Dataset
+                    </h2>
+                    <p class="text-xs text-slate-400">
+                        3,000 multi-spectral records synthesized using Canadian Forest Fire Weather Index (FWI) & McArthur Fire Danger dynamics.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="px-2.5 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800">3,000 Samples</span>
+                    <span class="px-2.5 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800">9 Feature Columns</span>
+                    <span class="px-2.5 py-1 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">80/20 Stratified Split</span>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="bg-slate-950 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/90 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="py-3 px-3">Temp (°C)</th>
+                                <th class="py-3 px-3">RH (%)</th>
+                                <th class="py-3 px-3">Rain (mm)</th>
+                                <th class="py-3 px-3">Wind (km/h)</th>
+                                <th class="py-3 px-3">NDVI</th>
+                                <th class="py-3 px-3">Slope (°)</th>
+                                <th class="py-3 px-3">Elev (m)</th>
+                                <th class="py-3 px-3">Dist Road (m)</th>
+                                <th class="py-3 px-3">Risk Tier</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataset-sample-tbody" class="divide-y divide-slate-850 font-mono">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 6: PROJECT OVERVIEW & OBE MAPPING -->
+        <!-- ========================================== -->
+        <div id="tab-about" class="tab-content hidden space-y-6">
+            <!-- Institutional Header -->
+            <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                <div class="text-center max-w-3xl mx-auto space-y-2">
+                    <span class="text-xs px-3 py-1 rounded-full bg-slate-900 text-amber-400 font-semibold border border-slate-800">VARDHAMAN COLLEGE OF ENGINEERING (AUTONOMOUS)</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-white">Forest Fire Risk Prediction Using Machine Learning</h2>
+                    <p class="text-xs text-slate-400">Department of Computer Science and Engineering (AI&ML) | Mini Project (A. Y. 2026-2027)</p>
+                    <div class="pt-2 flex flex-wrap justify-center gap-4 text-xs text-slate-300">
+                        <span><strong>Team No:</strong> 27</span>
+                        <span><strong>Members:</strong> G. Harinath (24881A6619), S. Anirudh (24881A6649)</span>
+                        <span><strong>Guide:</strong> Mrs. D Sandhya Rani (Assistant Professor)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem Statement & Objectives Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-3">
+                    <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-orange-400"></i>
+                        Problem Statement
+                    </h3>
+                    <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                        Forest fires cause severe ecological, environmental, and economic damage. Existing prediction methods often fail to accurately identify fire-prone regions because of the complex relationships among weather, vegetation, terrain, and human activities. This project develops a machine learning-based forest fire risk prediction system that analyzes historical and real-time environmental factors such as temperature, humidity, rainfall, wind speed, vegetation, and terrain data to predict high-risk areas and support early warning and disaster management.
+                    </p>
+                </div>
+
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-3">
+                    <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-400"></i>
+                        Project Objectives
+                    </h3>
+                    <ul class="text-xs text-slate-300 space-y-2">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-400 mt-1 text-[10px]"></i>
+                            <span><strong>Objective 1:</strong> To develop a machine learning model to predict forest fire risk using historical fire and environmental data.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-blue-400 mt-1 text-[10px]"></i>
+                            <span><strong>Objective 2:</strong> To compare Logistic Regression, Random Forest, and Support Vector Machine models to identify the best-performing algorithm.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-purple-400 mt-1 text-[10px]"></i>
+                            <span><strong>Objective 3:</strong> To generate forest fire risk maps to support early warning, resource allocation, and disaster prevention.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- UN SDG Mapping Cards -->
+            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+                <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-earth-americas text-cyan-400"></i>
+                    United Nations Sustainable Development Goals (SDG) Mapping
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-base font-black text-red-400 mb-1">SDG 4</span>
+                        <span class="text-slate-300 font-semibold block text-[11px]">Quality Education</span>
+                        <span class="text-[10px] text-slate-500">Promotes AI & ML knowledge</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-base font-black text-orange-400 mb-1">SDG 9</span>
+                        <span class="text-slate-300 font-semibold block text-[11px]">Industry & Innovation</span>
+                        <span class="text-[10px] text-slate-500">AI-driven early warnings</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-base font-black text-amber-400 mb-1">SDG 11</span>
+                        <span class="text-slate-300 font-semibold block text-[11px]">Sustainable Cities</span>
+                        <span class="text-[10px] text-slate-500">Protects communities</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-base font-black text-emerald-400 mb-1">SDG 13</span>
+                        <span class="text-slate-300 font-semibold block text-[11px]">Climate Action</span>
+                        <span class="text-[10px] text-slate-500">Wildfire risk mitigation</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-base font-black text-green-400 mb-1">SDG 15</span>
+                        <span class="text-slate-300 font-semibold block text-[11px]">Life on Land</span>
+                        <span class="text-[10px] text-slate-500">Flora & fauna protection</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-base font-black text-blue-400 mb-1">SDG 17</span>
+                        <span class="text-slate-300 font-semibold block text-[11px]">Partnerships</span>
+                        <span class="text-[10px] text-slate-500">Disaster agency collab</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Program Outcomes (POs) & PSOs Table -->
+            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+                <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap text-amber-400"></i>
+                    Outcome-Based Education (OBE) Mapping: POs & PSOs
+                </h3>
+                <div class="overflow-x-auto text-xs">
+                    <table class="w-full text-left text-slate-300">
+                        <thead class="bg-slate-900 text-slate-400 uppercase text-[10px] border-b border-slate-800">
+                            <tr>
+                                <th class="py-2.5 px-3">Outcome</th>
+                                <th class="py-2.5 px-3">Outcome Name</th>
+                                <th class="py-2.5 px-3">Project Specific Justification</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-850">
+                            <tr>
+                                <td class="py-2 px-3 font-bold text-amber-400">PO1</td>
+                                <td class="py-2 px-3 font-semibold">Engineering Knowledge</td>
+                                <td class="py-2 px-3 text-slate-400">Applies AI, Machine Learning, and data analysis techniques to develop a forest fire prediction system.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-3 font-bold text-amber-400">PO2</td>
+                                <td class="py-2 px-3 font-semibold">Problem Analysis</td>
+                                <td class="py-2 px-3 text-slate-400">Analyzes wildfire, weather, and environmental datasets to identify fire-prone regions accurately.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-3 font-bold text-amber-400">PO3</td>
+                                <td class="py-2 px-3 font-semibold">Design/Development</td>
+                                <td class="py-2 px-3 text-slate-400">Designs and develops an intelligent machine learning model for forest fire risk prediction.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-3 font-bold text-amber-400">PO5</td>
+                                <td class="py-2 px-3 font-semibold">Engineering Tool Usage</td>
+                                <td class="py-2 px-3 text-slate-400">Uses Python, Scikit-learn, Pandas, NumPy, Matplotlib, and GIS Leaflet tools for prediction and analysis.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-3 font-bold text-amber-400">PO7</td>
+                                <td class="py-2 px-3 font-semibold">Ethics & Environment</td>
+                                <td class="py-2 px-3 text-slate-400">Promotes sustainable environmental protection through responsible AI-based wildfire prediction.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-3 font-bold text-amber-400">PO8</td>
+                                <td class="py-2 px-3 font-semibold">Team Work</td>
+                                <td class="py-2 px-3 text-slate-400">Demonstrates effective teamwork in data collection, model development, testing, and documentation.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-3 font-bold text-amber-400">PO11</td>
+                                <td class="py-2 px-3 font-semibold">Life-long Learning</td>
+                                <td class="py-2 px-3 text-slate-400">Encourages continuous learning of emerging AI and Machine Learning technologies for environmental applications.</td>
+                            </tr>
+                            <tr class="bg-slate-900/40">
+                                <td class="py-2 px-3 font-bold text-emerald-400">PSO1</td>
+                                <td class="py-2 px-3 font-semibold text-emerald-300">AI Problem Solving</td>
+                                <td class="py-2 px-3 text-slate-400">Applies AI and Machine Learning to design and evaluate computational solutions for forest disaster prevention.</td>
+                            </tr>
+                            <tr class="bg-slate-900/40">
+                                <td class="py-2 px-3 font-bold text-emerald-400">PSO2</td>
+                                <td class="py-2 px-3 font-semibold text-emerald-300">Advanced ML Frameworks</td>
+                                <td class="py-2 px-3 text-slate-400">Demonstrates expertise in Scikit-Learn (RF, SVM, LR) for accurate fire prediction and decision-making.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 py-4 text-center text-xs text-slate-500 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>&copy; 2026-2027 Vardhaman College of Engineering (Autonomous) &bull; Team 27</p>
+            <p>Guided by <span class="text-slate-300">Mrs. D Sandhya Rani</span> | Developed by <span class="text-slate-300">G. Harinath & S. Anirudh</span></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
