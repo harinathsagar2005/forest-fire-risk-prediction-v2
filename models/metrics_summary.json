@@ -1,0 +1,277 @@
+{
+    "project_title": "Forest Fire Risk Prediction Using Machine Learning",
+    "institution": "Vardhaman College of Engineering (Autonomous)",
+    "department": "Department of Computer Science and Engineering (AI&ML)",
+    "team_number": 27,
+    "team_members": [
+        "G. Harinath (24881A6619)",
+        "S. Anirudh (24881A6649)"
+    ],
+    "guide": "Mrs. D Sandhya Rani, Assistant Professor",
+    "model_comparison": {
+        "Logistic Regression": {
+            "accuracy": 79.5,
+            "precision": 77.53,
+            "recall": 79.5,
+            "f1_score": 77.48,
+            "roc_auc": 0.8584,
+            "confusion_matrix": [
+                [
+                    68,
+                    55,
+                    0
+                ],
+                [
+                    20,
+                    400,
+                    10
+                ],
+                [
+                    3,
+                    35,
+                    9
+                ]
+            ],
+            "report": {
+                "Low Risk": {
+                    "precision": 0.7472527472527473,
+                    "recall": 0.5528455284552846,
+                    "f1-score": 0.6355140186915887,
+                    "support": 123.0
+                },
+                "Medium Risk": {
+                    "precision": 0.8163265306122449,
+                    "recall": 0.9302325581395349,
+                    "f1-score": 0.8695652173913043,
+                    "support": 430.0
+                },
+                "High Risk": {
+                    "precision": 0.47368421052631576,
+                    "recall": 0.19148936170212766,
+                    "f1-score": 0.2727272727272727,
+                    "support": 47.0
+                },
+                "accuracy": 0.795,
+                "macro avg": {
+                    "precision": 0.6790878294637693,
+                    "recall": 0.5581891494323157,
+                    "f1-score": 0.5926021696033886,
+                    "support": 600.0
+                },
+                "weighted avg": {
+                    "precision": 0.7753260899501501,
+                    "recall": 0.795,
+                    "f1-score": 0.7748324159925135,
+                    "support": 600.0
+                }
+            }
+        },
+        "Support Vector Machine": {
+            "accuracy": 86.5,
+            "precision": 85.96,
+            "recall": 86.5,
+            "f1_score": 85.98,
+            "roc_auc": 0.9213,
+            "confusion_matrix": [
+                [
+                    92,
+                    31,
+                    0
+                ],
+                [
+                    16,
+                    404,
+                    10
+                ],
+                [
+                    2,
+                    22,
+                    23
+                ]
+            ],
+            "report": {
+                "Low Risk": {
+                    "precision": 0.8363636363636363,
+                    "recall": 0.7479674796747967,
+                    "f1-score": 0.7896995708154506,
+                    "support": 123.0
+                },
+                "Medium Risk": {
+                    "precision": 0.8840262582056893,
+                    "recall": 0.9395348837209302,
+                    "f1-score": 0.910935738444194,
+                    "support": 430.0
+                },
+                "High Risk": {
+                    "precision": 0.696969696969697,
+                    "recall": 0.48936170212765956,
+                    "f1-score": 0.575,
+                    "support": 47.0
+                },
+                "accuracy": 0.865,
+                "macro avg": {
+                    "precision": 0.8057865305130075,
+                    "recall": 0.7256213551744621,
+                    "f1-score": 0.7585451030865483,
+                    "support": 600.0
+                },
+                "weighted avg": {
+                    "precision": 0.8596026567645824,
+                    "recall": 0.865,
+                    "f1-score": 0.859767357902173,
+                    "support": 600.0
+                }
+            }
+        },
+        "Random Forest": {
+            "accuracy": 95.0,
+            "precision": 94.93,
+            "recall": 95.0,
+            "f1_score": 94.83,
+            "roc_auc": 0.9564,
+            "confusion_matrix": [
+                [
+                    114,
+                    9,
+                    0
+                ],
+                [
+                    4,
+                    423,
+                    3
+                ],
+                [
+                    3,
+                    11,
+                    33
+                ]
+            ],
+            "report": {
+                "Low Risk": {
+                    "precision": 0.9421487603305785,
+                    "recall": 0.926829268292683,
+                    "f1-score": 0.9344262295081968,
+                    "support": 123.0
+                },
+                "Medium Risk": {
+                    "precision": 0.9548532731376975,
+                    "recall": 0.9837209302325581,
+                    "f1-score": 0.9690721649484536,
+                    "support": 430.0
+                },
+                "High Risk": {
+                    "precision": 0.9166666666666666,
+                    "recall": 0.7021276595744681,
+                    "f1-score": 0.7951807228915663,
+                    "support": 47.0
+                },
+                "accuracy": 0.95,
+                "macro avg": {
+                    "precision": 0.9378895667116476,
+                    "recall": 0.8708926193665697,
+                    "f1-score": 0.8995597057827389,
+                    "support": 600.0
+                },
+                "weighted avg": {
+                    "precision": 0.9492575638386741,
+                    "recall": 0.95,
+                    "f1-score": 0.9483482518887448,
+                    "support": 600.0
+                }
+            }
+        }
+    },
+    "best_model": "Random Forest",
+    "feature_importance": [
+        {
+            "feature": "rainfall",
+            "importance": 36.81
+        },
+        {
+            "feature": "relative_humidity",
+            "importance": 17.38
+        },
+        {
+            "feature": "temperature",
+            "importance": 16.66
+        },
+        {
+            "feature": "wind_speed",
+            "importance": 7.52
+        },
+        {
+            "feature": "ndvi",
+            "importance": 6.63
+        },
+        {
+            "feature": "slope",
+            "importance": 5.65
+        },
+        {
+            "feature": "elevation",
+            "importance": 3.25
+        },
+        {
+            "feature": "distance_to_road",
+            "importance": 3.08
+        },
+        {
+            "feature": "atmospheric_pressure",
+            "importance": 3.02
+        }
+    ],
+    "shap_importance": [
+        {
+            "feature": "temperature",
+            "shap_importance": 0.0518
+        },
+        {
+            "feature": "slope",
+            "shap_importance": 0.0398
+        },
+        {
+            "feature": "wind_speed",
+            "shap_importance": 0.0393
+        },
+        {
+            "feature": "relative_humidity",
+            "shap_importance": 0.0328
+        },
+        {
+            "feature": "rainfall",
+            "shap_importance": 0.0283
+        },
+        {
+            "feature": "ndvi",
+            "shap_importance": 0.028
+        },
+        {
+            "feature": "elevation",
+            "shap_importance": 0.0043
+        },
+        {
+            "feature": "atmospheric_pressure",
+            "shap_importance": 0.004
+        },
+        {
+            "feature": "distance_to_road",
+            "shap_importance": 0.0036
+        }
+    ],
+    "target_classes": [
+        "Low Risk",
+        "Medium Risk",
+        "High Risk"
+    ],
+    "features": [
+        "temperature",
+        "relative_humidity",
+        "rainfall",
+        "wind_speed",
+        "atmospheric_pressure",
+        "ndvi",
+        "elevation",
+        "slope",
+        "distance_to_road"
+    ]
+}

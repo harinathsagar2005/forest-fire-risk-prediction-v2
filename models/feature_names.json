@@ -1,0 +1,11 @@
+[
+    "temperature",
+    "relative_humidity",
+    "rainfall",
+    "wind_speed",
+    "atmospheric_pressure",
+    "ndvi",
+    "elevation",
+    "slope",
+    "distance_to_road"
+]
