@@ -93,9 +93,12 @@
                         <div class="flex items-center gap-1.5 text-xs">
                             <label class="text-slate-500">Algorithm:</label>
                             <select id="model-select" class="bg-white border border-slate-300 text-xs text-slate-800 font-medium rounded px-2 py-1 focus:outline-none">
-                                <option value="Random Forest" selected>Random Forest (95.0%)</option>
-                                <option value="Support Vector Machine">SVM (86.5%)</option>
-                                <option value="Logistic Regression">Logistic Regression (79.5%)</option>
+                                <option value="Gradient Boosting" selected>Gradient Boosting (99.3% - Best)</option>
+                                <option value="Voting Ensemble">Voting Ensemble (99.1%)</option>
+                                <option value="Random Forest">Random Forest (97.6%)</option>
+                                <option value="Extra Trees">Extra Trees (93.9%)</option>
+                                <option value="Support Vector Machine">SVM (91.3%)</option>
+                                <option value="Logistic Regression">Logistic Regression (84.4%)</option>
                             </select>
                         </div>
                     </div>
@@ -264,21 +267,26 @@
                         <!-- Model Consensus -->
                         <div class="border-t border-slate-100 pt-2.5">
                             <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block mb-1.5">Model Comparison</span>
-                            <div class="grid grid-cols-3 gap-2 text-center text-xs">
-                                <div class="p-1.5 rounded bg-slate-50 border border-slate-100">
-                                    <p class="text-slate-500 text-[10px]">Random Forest</p>
-                                    <p id="consensus-rf" class="font-bold text-red-600">High Risk</p>
-                                    <p class="text-[9px] text-slate-400">95.0%</p>
+                            <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+                                <div class="p-1 rounded bg-slate-50 border border-slate-100">
+                                    <p class="text-slate-500 text-[9px] truncate">Gradient Boost</p>
+                                    <p id="consensus-gb" class="font-bold text-red-600 text-xs">High Risk</p>
+                                    <p class="text-[9px] text-slate-400">99.3%</p>
                                 </div>
-                                <div class="p-1.5 rounded bg-slate-50 border border-slate-100">
-                                    <p class="text-slate-500 text-[10px]">SVM (RBF)</p>
-                                    <p id="consensus-svm" class="font-bold text-red-600">High Risk</p>
-                                    <p class="text-[9px] text-slate-400">86.5%</p>
+                                <div class="p-1 rounded bg-slate-50 border border-slate-100">
+                                    <p class="text-slate-500 text-[9px] truncate">Ensemble</p>
+                                    <p id="consensus-ens" class="font-bold text-red-600 text-xs">High Risk</p>
+                                    <p class="text-[9px] text-slate-400">99.1%</p>
                                 </div>
-                                <div class="p-1.5 rounded bg-slate-50 border border-slate-100">
-                                    <p class="text-slate-500 text-[10px]">Logistic Reg.</p>
-                                    <p id="consensus-lr" class="font-bold text-amber-600">Medium Risk</p>
-                                    <p class="text-[9px] text-slate-400">79.5%</p>
+                                <div class="p-1 rounded bg-slate-50 border border-slate-100">
+                                    <p class="text-slate-500 text-[9px] truncate">Random Forest</p>
+                                    <p id="consensus-rf" class="font-bold text-red-600 text-xs">High Risk</p>
+                                    <p class="text-[9px] text-slate-400">97.6%</p>
+                                </div>
+                                <div class="p-1 rounded bg-slate-50 border border-slate-100">
+                                    <p class="text-slate-500 text-[9px] truncate">SVM (RBF)</p>
+                                    <p id="consensus-svm" class="font-bold text-red-600 text-xs">High Risk</p>
+                                    <p class="text-[9px] text-slate-400">91.3%</p>
                                 </div>
                             </div>
                         </div>
@@ -373,62 +381,116 @@
         <div id="tab-models" class="tab-content hidden space-y-4">
             <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs">
                 <span class="font-semibold text-slate-900">Comparative Algorithm Performance</span>
-                <span class="text-slate-500 ml-2">&bull; Evaluated across 3,000 stratified environmental records</span>
+                <span class="text-slate-500 ml-2">&bull; Evaluated across 3,500 stratified environmental records (Canadian FWI calibrated dynamics)</span>
             </div>
 
-            <!-- Algorithm Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                <!-- Random Forest -->
-                <div class="bg-white p-3.5 rounded-lg border-2 border-emerald-600">
+            <!-- Algorithm Cards (6 Models) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                <!-- Gradient Boosting -->
+                <div class="bg-white p-3.5 rounded-lg border-2 border-slate-900 shadow-sm">
                     <div class="flex justify-between items-center mb-1.5">
                         <span class="text-[10px] uppercase font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Rank 1 (Best)</span>
-                        <span class="text-xs font-mono font-bold text-emerald-700">95.00%</span>
+                        <span class="text-xs font-mono font-bold text-slate-900">99.29%</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xs mb-1.5">Gradient Boosting (GBDT)</h3>
+                    <div class="space-y-0.5 text-xs border-t border-slate-100 pt-1.5 font-mono">
+                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">99.29%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">99.29%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">99.28%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.9901</span></div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-2 pt-1.5 border-t border-slate-100 leading-normal">
+                        Sequential negative-gradient descent boosting isolating boundary microclimates and non-linear interactions.
+                    </p>
+                </div>
+
+                <!-- Voting Ensemble -->
+                <div class="bg-white p-3.5 rounded-lg border border-slate-300">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-[10px] uppercase font-bold text-blue-800 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">Rank 2</span>
+                        <span class="text-xs font-mono font-bold text-slate-900">99.14%</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xs mb-1.5">Voting Ensemble (Soft Voting)</h3>
+                    <div class="space-y-0.5 text-xs border-t border-slate-100 pt-1.5 font-mono">
+                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">99.14%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">99.14%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">99.14%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.9904</span></div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-2 pt-1.5 border-t border-slate-100 leading-normal">
+                        Probability consensus blending Gradient Boosting, Random Forest, and Extra Trees for peak generalization.
+                    </p>
+                </div>
+
+                <!-- Random Forest -->
+                <div class="bg-white p-3.5 rounded-lg border border-slate-300">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-[10px] uppercase font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">Rank 3</span>
+                        <span class="text-xs font-mono font-bold text-slate-900">97.57%</span>
                     </div>
                     <h3 class="font-bold text-slate-900 text-xs mb-1.5">Random Forest</h3>
                     <div class="space-y-0.5 text-xs border-t border-slate-100 pt-1.5 font-mono">
-                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">94.93%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">95.00%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">94.83%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.9564</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">97.62%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">97.57%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">97.50%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.9902</span></div>
                     </div>
                     <p class="text-[11px] text-slate-500 mt-2 pt-1.5 border-t border-slate-100 leading-normal">
-                        Accurately isolates orthogonal non-linear thresholds (e.g. wind speeds multiply risk only when humidity is critically low).
+                        300 decorrelated decision trees with deep branching isolating multi-feature environmental fire regimes.
+                    </p>
+                </div>
+
+                <!-- Extra Trees -->
+                <div class="bg-white p-3.5 rounded-lg border border-slate-200">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-[10px] uppercase font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">Rank 4</span>
+                        <span class="text-xs font-mono font-bold text-slate-800">93.86%</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xs mb-1.5">Extra Trees (Extremely Randomized)</h3>
+                    <div class="space-y-0.5 text-xs border-t border-slate-100 pt-1.5 font-mono">
+                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">94.23%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">93.86%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">93.28%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.9847</span></div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-2 pt-1.5 border-t border-slate-100 leading-normal">
+                        Random cut-point selection reducing variance across fuel moisture and topography thresholds.
                     </p>
                 </div>
 
                 <!-- SVM -->
                 <div class="bg-white p-3.5 rounded-lg border border-slate-200">
                     <div class="flex justify-between items-center mb-1.5">
-                        <span class="text-[10px] uppercase font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">Rank 2</span>
-                        <span class="text-xs font-mono font-bold text-slate-800">86.50%</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">Rank 5</span>
+                        <span class="text-xs font-mono font-bold text-slate-800">91.29%</span>
                     </div>
                     <h3 class="font-bold text-slate-900 text-xs mb-1.5">Support Vector Machine (RBF)</h3>
                     <div class="space-y-0.5 text-xs border-t border-slate-100 pt-1.5 font-mono">
-                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">85.96%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">86.50%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">85.98%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.9213</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">91.08%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">91.29%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">90.94%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.9687</span></div>
                     </div>
                     <p class="text-[11px] text-slate-500 mt-2 pt-1.5 border-t border-slate-100 leading-normal">
-                        Kernel projection handles smooth non-linear manifolds well, with minor boundary overlap between medium and high risk zones.
+                        Radial basis function kernel mapping complex weather patterns into separable hyperspace.
                     </p>
                 </div>
 
                 <!-- Logistic Regression -->
                 <div class="bg-white p-3.5 rounded-lg border border-slate-200">
                     <div class="flex justify-between items-center mb-1.5">
-                        <span class="text-[10px] uppercase font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">Rank 3</span>
-                        <span class="text-xs font-mono font-bold text-slate-800">79.50%</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">Rank 6</span>
+                        <span class="text-xs font-mono font-bold text-slate-800">84.43%</span>
                     </div>
                     <h3 class="font-bold text-slate-900 text-xs mb-1.5">Logistic Regression</h3>
                     <div class="space-y-0.5 text-xs border-t border-slate-100 pt-1.5 font-mono">
-                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">77.53%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">79.50%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">77.48%</span></div>
-                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.8584</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Precision:</span><span class="text-slate-900">83.76%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>Recall:</span><span class="text-slate-900">84.43%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>F1-Score:</span><span class="text-slate-900">83.28%</span></div>
+                        <div class="flex justify-between text-slate-600"><span>ROC-AUC:</span><span class="text-slate-900">0.9155</span></div>
                     </div>
                     <p class="text-[11px] text-slate-500 mt-2 pt-1.5 border-t border-slate-100 leading-normal">
-                        Linear hyperplanes struggle to capture high-order interaction effects without polynomial feature expansion.
+                        Linear decision boundary providing transparent probabilistic baseline comparisons.
                     </p>
                 </div>
             </div>
@@ -445,7 +507,7 @@
                 </div>
                 <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col items-center">
                     <span class="font-bold text-slate-900 text-xs uppercase tracking-wider block mb-2 w-full text-left">
-                        Random Forest Confusion Matrix
+                        Best Model Confusion Matrix (Gradient Boosting - 99.29%)
                     </span>
                     <img src="/static/images/confusion_matrix_rf.png" alt="Confusion Matrix" class="max-h-56 object-contain rounded">
                 </div>

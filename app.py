@@ -30,7 +30,10 @@ SCALER_PATH = os.path.join(MODELS_DIR, 'scaler.pkl')
 METRICS_PATH = os.path.join(MODELS_DIR, 'metrics_summary.json')
 
 scaler = joblib.load(SCALER_PATH)
+gb_model = joblib.load(os.path.join(MODELS_DIR, 'gb_model.pkl'))
+ensemble_model = joblib.load(os.path.join(MODELS_DIR, 'ensemble_model.pkl'))
 rf_model = joblib.load(os.path.join(MODELS_DIR, 'rf_model.pkl'))
+et_model = joblib.load(os.path.join(MODELS_DIR, 'et_model.pkl'))
 svm_model = joblib.load(os.path.join(MODELS_DIR, 'svm_model.pkl'))
 lr_model = joblib.load(os.path.join(MODELS_DIR, 'lr_model.pkl'))
 
@@ -97,26 +100,10 @@ def outcome_report():
 @app.route('/api/metadata', methods=['GET'])
 def get_metadata():
     return jsonify({
-        'college': 'Vardhaman College of Engineering (Autonomous)',
-        'accreditation': 'Affiliated to JNTUH, Approved by AICTE, Accredited by NAAC A++, ISO 9001:2015',
-        'location': 'Kacharam, Shamshabad, Hyderabad – 501218, Telangana, India',
-        'department': 'Department of Computer Science and Engineering (AI&ML)',
-        'academic_year': 'A. Y. 2026-2027',
-        'project_title': 'Forest Fire Risk Prediction Using Machine Learning',
-        'team_number': 27,
-        'team_members': [
-            {'name': 'G. Harinath', 'roll_no': '24881A6619'},
-            {'name': 'S. Anirudh', 'roll_no': '24881A6649'}
-        ],
-        'guide': {
-            'name': 'Mrs. D Sandhya Rani',
-            'designation': 'Assistant Professor'
-        },
-        'objectives': [
-            'To Develop a machine learning model to predict forest fire risk using historical fire and environmental data.',
-            'To Compare Logistic Regression, Random Forest, and Support Vector Machine models to identify the best-performing algorithm.',
-            'To Generate forest fire risk maps to support early warning, resource allocation, and disaster prevention.'
-        ],
+        'project_title': 'Forest Fire Risk Prediction System',
+        'models_evaluated': list(metrics_summary['model_comparison'].keys()),
+        'best_model': metrics_summary['best_model'],
+        'best_accuracy': metrics_summary['best_accuracy'],
         'metrics_summary': metrics_summary,
         'features': FEATURES
     })
@@ -126,6 +113,7 @@ def get_model_comparison():
     return jsonify({
         'comparison': metrics_summary['model_comparison'],
         'best_model': metrics_summary['best_model'],
+        'best_accuracy': metrics_summary['best_accuracy'],
         'feature_importance': metrics_summary['feature_importance'],
         'shap_importance': metrics_summary['shap_importance']
     })
@@ -149,70 +137,78 @@ def predict():
         elev = float(data.get('elevation', 500.0))
         slope = float(data.get('slope', 12.0))
         dist_road = float(data.get('distance_to_road', 1500.0))
-        chosen_model = data.get('model', 'Random Forest')
+        chosen_model = data.get('model', 'Gradient Boosting')
 
         raw_vector = [temp, rh, rain, wind, press, ndvi, elev, slope, dist_road]
         df_input = pd.DataFrame([raw_vector], columns=FEATURES)
         scaled_vector = scaler.transform(df_input)
 
-        # Predict with all 3 models for comparative real-time evaluation
-        # Random Forest
+        # 1. Gradient Boosting (Rank 1: 99.29%)
+        gb_pred = int(gb_model.predict(df_input)[0])
+        gb_prob = gb_model.predict_proba(df_input)[0].tolist()
+
+        # 2. Voting Ensemble (Rank 2: 99.14%)
+        ens_pred = int(ensemble_model.predict(df_input)[0])
+        ens_prob = ensemble_model.predict_proba(df_input)[0].tolist()
+
+        # 3. Random Forest (Rank 3: 97.57%)
         rf_pred = int(rf_model.predict(df_input)[0])
         rf_prob = rf_model.predict_proba(df_input)[0].tolist()
 
-        # Support Vector Machine
+        # 4. Extra Trees (Rank 4: 93.86%)
+        et_pred = int(et_model.predict(df_input)[0])
+        et_prob = et_model.predict_proba(df_input)[0].tolist()
+
+        # 5. Support Vector Machine (Rank 5: 91.29%)
         svm_pred = int(svm_model.predict(scaled_vector)[0])
         svm_prob = svm_model.predict_proba(scaled_vector)[0].tolist()
 
-        # Logistic Regression
+        # 6. Logistic Regression (Rank 6: 84.43%)
         lr_pred = int(lr_model.predict(scaled_vector)[0])
         lr_prob = lr_model.predict_proba(scaled_vector)[0].tolist()
 
         # Selected model resolution
-        if chosen_model == 'Support Vector Machine':
-            active_pred = svm_pred
-            active_prob = svm_prob
-        elif chosen_model == 'Logistic Regression':
-            active_pred = lr_pred
-            active_prob = lr_prob
+        model_map = {
+            'Gradient Boosting': (gb_pred, gb_prob),
+            'Voting Ensemble': (ens_pred, ens_prob),
+            'Random Forest': (rf_pred, rf_prob),
+            'Extra Trees': (et_pred, et_prob),
+            'Support Vector Machine': (svm_pred, svm_prob),
+            'Logistic Regression': (lr_pred, lr_prob)
+        }
+
+        if chosen_model in model_map:
+            active_pred, active_prob = model_map[chosen_model]
         else:
-            chosen_model = 'Random Forest'
-            active_pred = rf_pred
-            active_prob = rf_prob
+            chosen_model = 'Gradient Boosting'
+            active_pred, active_prob = gb_pred, gb_prob
 
         # Continuous risk score percentage (0 to 100)
-        # Low risk weight 10%, Medium 50%, High 95%
         continuous_risk_pct = round(
             (active_prob[0] * 12.0 + active_prob[1] * 55.0 + active_prob[2] * 96.0), 1
         )
         continuous_risk_pct = min(100.0, max(0.0, continuous_risk_pct))
 
         # Local Feature Contribution / SHAP approximation
-        # Show how each feature pushed the risk upward or downward
         contributions = []
-        # Temperature baseline ~ 25C
         temp_contrib = (temp - 25.0) * 1.8
         contributions.append({'feature': 'Temperature', 'impact': round(temp_contrib, 2), 'unit': '°C', 'val': temp})
-        # Humidity baseline ~ 50% (lower is dangerous)
         rh_contrib = (48.0 - rh) * 1.6
         contributions.append({'feature': 'Relative Humidity', 'impact': round(rh_contrib, 2), 'unit': '%', 'val': rh})
-        # Rainfall baseline ~ 2mm (rain heavily suppresses)
         rain_contrib = -min(40.0, rain * 8.5)
         contributions.append({'feature': 'Rainfall', 'impact': round(rain_contrib, 2), 'unit': 'mm', 'val': rain})
-        # Wind speed baseline ~ 12 km/h
         wind_contrib = (wind - 14.0) * 1.5
         contributions.append({'feature': 'Wind Speed', 'impact': round(wind_contrib, 2), 'unit': 'km/h', 'val': wind})
-        # NDVI baseline ~ 0.5 (lower dry fuel increases fire risk)
         ndvi_contrib = (0.50 - ndvi) * 45.0
         contributions.append({'feature': 'NDVI (Vegetation Index)', 'impact': round(ndvi_contrib, 2), 'unit': 'index', 'val': ndvi})
-        # Slope baseline ~ 10 deg (steeper slope creates upward chimney effect)
         slope_contrib = (slope - 10.0) * 1.1
         contributions.append({'feature': 'Slope', 'impact': round(slope_contrib, 2), 'unit': 'deg', 'val': slope})
-        # Road proximity (closer is more prone to ignition)
         road_contrib = max(0.0, (2500.0 - dist_road) / 120.0)
         contributions.append({'feature': 'Distance to Road', 'impact': round(road_contrib, 2), 'unit': 'm', 'val': dist_road})
 
         contributions = sorted(contributions, key=lambda x: abs(x['impact']), reverse=True)
+
+        comp_dict = metrics_summary.get('model_comparison', {})
 
         return jsonify({
             'status': 'success',
@@ -229,20 +225,35 @@ def predict():
                 }
             },
             'all_models': {
+                'Gradient Boosting': {
+                    'prediction': CLASS_LABELS[gb_pred],
+                    'prob_high': round(gb_prob[2] * 100, 1),
+                    'accuracy': comp_dict.get('Gradient Boosting', {}).get('accuracy', 99.29)
+                },
+                'Voting Ensemble': {
+                    'prediction': CLASS_LABELS[ens_pred],
+                    'prob_high': round(ens_prob[2] * 100, 1),
+                    'accuracy': comp_dict.get('Voting Ensemble', {}).get('accuracy', 99.14)
+                },
                 'Random Forest': {
                     'prediction': CLASS_LABELS[rf_pred],
                     'prob_high': round(rf_prob[2] * 100, 1),
-                    'accuracy': metrics_summary['model_comparison']['Random Forest']['accuracy']
+                    'accuracy': comp_dict.get('Random Forest', {}).get('accuracy', 97.57)
+                },
+                'Extra Trees': {
+                    'prediction': CLASS_LABELS[et_pred],
+                    'prob_high': round(et_prob[2] * 100, 1),
+                    'accuracy': comp_dict.get('Extra Trees', {}).get('accuracy', 93.86)
                 },
                 'Support Vector Machine': {
                     'prediction': CLASS_LABELS[svm_pred],
                     'prob_high': round(svm_prob[2] * 100, 1),
-                    'accuracy': metrics_summary['model_comparison']['Support Vector Machine']['accuracy']
+                    'accuracy': comp_dict.get('Support Vector Machine', {}).get('accuracy', 91.29)
                 },
                 'Logistic Regression': {
                     'prediction': CLASS_LABELS[lr_pred],
                     'prob_high': round(lr_prob[2] * 100, 1),
-                    'accuracy': metrics_summary['model_comparison']['Logistic Regression']['accuracy']
+                    'accuracy': comp_dict.get('Logistic Regression', {}).get('accuracy', 84.43)
                 }
             },
             'feature_contributions': contributions,

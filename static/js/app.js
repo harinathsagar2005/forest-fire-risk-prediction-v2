@@ -209,17 +209,29 @@ function renderPredictionResults(data) {
     document.getElementById('prob-bar-high').style.width = `${pred.probabilities['High Risk']}%`;
 
     // Multi-Model Consensus
+    const gbEl = document.getElementById('consensus-gb');
+    if (gbEl && allModels['Gradient Boosting']) {
+        gbEl.innerText = allModels['Gradient Boosting'].prediction;
+        gbEl.className = `font-bold ${getModelTextColor(allModels['Gradient Boosting'].prediction)}`;
+    }
+
+    const ensEl = document.getElementById('consensus-ens');
+    if (ensEl && allModels['Voting Ensemble']) {
+        ensEl.innerText = allModels['Voting Ensemble'].prediction;
+        ensEl.className = `font-bold ${getModelTextColor(allModels['Voting Ensemble'].prediction)}`;
+    }
+
     const rfEl = document.getElementById('consensus-rf');
-    rfEl.innerText = allModels['Random Forest'].prediction;
-    rfEl.className = `font-bold ${getModelTextColor(allModels['Random Forest'].prediction)}`;
+    if (rfEl && allModels['Random Forest']) {
+        rfEl.innerText = allModels['Random Forest'].prediction;
+        rfEl.className = `font-bold ${getModelTextColor(allModels['Random Forest'].prediction)}`;
+    }
 
     const svmEl = document.getElementById('consensus-svm');
-    svmEl.innerText = allModels['Support Vector Machine'].prediction;
-    svmEl.className = `font-bold ${getModelTextColor(allModels['Support Vector Machine'].prediction)}`;
-
-    const lrEl = document.getElementById('consensus-lr');
-    lrEl.innerText = allModels['Logistic Regression'].prediction;
-    lrEl.className = `font-bold ${getModelTextColor(allModels['Logistic Regression'].prediction)}`;
+    if (svmEl && allModels['Support Vector Machine']) {
+        svmEl.innerText = allModels['Support Vector Machine'].prediction;
+        svmEl.className = `font-bold ${getModelTextColor(allModels['Support Vector Machine'].prediction)}`;
+    }
 
     // Standard Operating Protocols
     const sopContainer = document.getElementById('sop-content');
@@ -430,42 +442,40 @@ async function initCharts() {
         const ctxComp = document.getElementById('chart-comparison');
         if (ctxComp && comp) {
             const labels = ['Accuracy', 'Precision', 'Recall', 'F1-Score'];
-            const rfVals = [comp['Random Forest'].accuracy, comp['Random Forest'].precision, comp['Random Forest'].recall, comp['Random Forest'].f1_score];
-            const svmVals = [comp['Support Vector Machine'].accuracy, comp['Support Vector Machine'].precision, comp['Support Vector Machine'].recall, comp['Support Vector Machine'].f1_score];
-            const lrVals = [comp['Logistic Regression'].accuracy, comp['Logistic Regression'].precision, comp['Logistic Regression'].recall, comp['Logistic Regression'].f1_score];
+            const palette = [
+                { name: 'Gradient Boosting', color: '#0f172a' },
+                { name: 'Voting Ensemble', color: '#2563eb' },
+                { name: 'Random Forest', color: '#059669' },
+                { name: 'Extra Trees', color: '#d97706' },
+                { name: 'Support Vector Machine', color: '#7c3aed' },
+                { name: 'Logistic Regression', color: '#64748b' }
+            ];
+
+            const datasets = palette.filter(m => comp[m.name]).map(m => {
+                const info = comp[m.name];
+                return {
+                    label: `${m.name} (${info.accuracy}%)`,
+                    data: [info.accuracy, info.precision, info.recall, info.f1_score],
+                    backgroundColor: m.color,
+                    borderRadius: 3
+                };
+            });
 
             comparisonChart = new Chart(ctxComp, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [
-                        {
-                            label: 'Random Forest (95.0%)',
-                            data: rfVals,
-                            backgroundColor: '#0f172a',
-                            borderRadius: 3
-                        },
-                        {
-                            label: 'Support Vector Machine (86.5%)',
-                            data: '#64748b',
-                            borderRadius: 3
-                        },
-                        {
-                            label: 'Logistic Regression (79.5%)',
-                            data: '#94a3b8',
-                            borderRadius: 3
-                        }
-                    ]
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { labels: { color: '#334155', font: { size: 11, family: 'Inter' } } }
+                        legend: { labels: { color: '#334155', font: { size: 10.5, family: 'Inter' } } }
                     },
                     scales: {
                         y: {
-                            min: 60,
+                            min: 75,
                             max: 100,
                             ticks: { color: '#64748b', font: { family: 'monospace', size: 10 } },
                             grid: { color: '#f1f5f9' }

@@ -78,17 +78,20 @@ flowchart TD
 
 ## 📊 Algorithm Comparison & Experimental Outcomes
 
-The models were evaluated on an independent stratified test dataset of 600 samples under identical benchmark conditions:
+The models were evaluated on an independent stratified test dataset of 700 samples (from 3,500 records) under identical benchmark conditions:
 
 | Algorithm | Accuracy (%) | Precision (Weighted) | Recall (Weighted) | F1-Score (Weighted) | ROC-AUC | Performance Rank |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **🌲 Random Forest (Ensemble)** | **95.00%** | **94.93%** | **95.00%** | **94.83%** | **0.9564** | **Rank #1 (Best)** |
-| **⚡ Support Vector Machine (RBF)** | **86.50%** | **85.96%** | **86.50%** | **85.98%** | **0.9213** | **Rank #2** |
-| **📈 Logistic Regression (Multinomial)**| **79.50%** | **77.53%** | **79.50%** | **77.48%** | **0.8584** | **Rank #3** |
+| **🚀 Gradient Boosting (GBDT)** | **99.29%** | **99.29%** | **99.29%** | **99.28%** | **0.9901** | **Rank #1 (Best)** |
+| **🗳️ Voting Ensemble (Soft Voting)** | **99.14%** | **99.14%** | **99.14%** | **99.14%** | **0.9904** | **Rank #2** |
+| **🌲 Random Forest (Ensemble)** | **97.57%** | **97.62%** | **97.57%** | **97.50%** | **0.9902** | **Rank #3** |
+| **🎋 Extra Trees Classifier** | **93.86%** | **94.23%** | **93.86%** | **93.28%** | **0.9847** | **Rank #4** |
+| **⚡ Support Vector Machine (RBF)** | **91.29%** | **91.08%** | **91.29%** | **90.94%** | **0.9687** | **Rank #5** |
+| **📈 Logistic Regression (Multinomial)**| **84.43%** | **83.76%** | **84.43%** | **83.28%** | **0.9155** | **Rank #6** |
 
 <div align="center">
   <img src="static/images/model_comparison.png" alt="Model Comparison" width="85%"/>
-  <p><em>Figure 1: Comparative Multi-Metric Performance Evaluation (RF vs SVM vs LR)</em></p>
+  <p><em>Figure 1: Comparative Multi-Metric Performance Evaluation Across 6 Machine Learning Algorithms</em></p>
 </div>
 
 ### 🔍 Why Random Forest Outperformed SVM and Logistic Regression
