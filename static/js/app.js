@@ -1,7 +1,6 @@
 /**
- * Forest Fire Risk Prediction Web Application
- * Minimal Scientific Interface Logic
- * Vardhaman College of Engineering (Autonomous) | Team 27
+ * Wildfire Risk Intelligence System
+ * Scientific Client Logic & Data Visualization
  */
 
 let mapInstance = null;

@@ -303,7 +303,7 @@ def generate_charts(results, feat_imp):
                          ha='center', va='bottom', fontsize=9, fontweight='bold')
 
     plt.ylabel('Score (%)', fontsize=12, fontweight='bold')
-    plt.title('Algorithm Comparison: Logistic Regression vs SVM vs Random Forest\nVardhaman College of Engineering | Team 27', fontsize=13, fontweight='bold', pad=12)
+    plt.title('Algorithm Comparison: Logistic Regression vs SVM vs Random Forest\nPerformance Benchmark Across Stratified Test Split', fontsize=12, fontweight='bold', pad=12)
     plt.xticks(x, metric_labels, fontsize=11, fontweight='bold')
     plt.ylim(55, 105)
     plt.grid(axis='y', linestyle='--', alpha=0.5)
@@ -334,7 +334,7 @@ def generate_charts(results, feat_imp):
     plt.figure(figsize=(6.5, 5.2))
     cm = np.array(results['Random Forest']['confusion_matrix'])
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.YlOrRd)
-    plt.title('Confusion Matrix: Random Forest (Accuracy: {:.1f}%)\nTeam 27 - Forest Fire Risk Prediction'.format(results['Random Forest']['accuracy']), fontsize=12, fontweight='bold')
+    plt.title('Confusion Matrix: Random Forest Classifier (Accuracy: {:.1f}%)\nStratified Multi-Class Validation (N=600)'.format(results['Random Forest']['accuracy']), fontsize=12, fontweight='bold')
     plt.colorbar()
     tick_marks = np.arange(3)
     classes = ['Low Risk', 'Medium Risk', 'High Risk']
