@@ -1,55 +1,98 @@
-/* Forest Fire Risk Prediction Styles */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+/* Minimalist Scientific Theme for Forest Fire Risk Prediction */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --accent: #0f172a;
+}
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
 }
 
 code, pre, .font-mono {
     font-family: 'JetBrains Mono', monospace;
 }
 
-/* Tab button active state */
+/* Minimal Tab button active state */
+.tab-btn {
+    border-bottom: 2px solid transparent;
+    color: #64748b;
+    font-weight: 500;
+    transition: all 0.15s ease-in-out;
+}
+
+.tab-btn:hover {
+    color: #0f172a;
+}
+
 .tab-btn.active {
-    background-color: #1e293b;
-    color: #ffffff;
-    border-bottom: 2px solid #ea580c;
+    color: #0f172a;
+    border-bottom: 2px solid #0f172a;
+    font-weight: 600;
 }
 
-/* Range input accent custom styling */
+/* Minimalist Range Sliders */
 input[type=range] {
-    height: 6px;
-    border-radius: 9999px;
-    background: #334155;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 4px;
+    background: #e2e8f0;
     outline: none;
-    transition: background 0.2s;
 }
 
-/* Custom Scrollbars */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #0f172a;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: transform 0.1s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+/* Clean Custom Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #0f172a;
+    background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: #cbd5e1;
     border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #475569;
+    background: #94a3b8;
 }
 
-/* Leaflet Map overrides for dark theme aesthetic */
+/* Leaflet Map overrides for minimal clean aesthetic */
 .leaflet-container {
-    background: #0f172a !important;
+    background: #f8fafc !important;
+    font-family: 'Inter', sans-serif !important;
 }
 
 .leaflet-popup-content-wrapper {
     background: #ffffff !important;
-    border-radius: 12px !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
     padding: 0 !important;
 }
 
@@ -58,27 +101,9 @@ input[type=range] {
 }
 
 .leaflet-control-layers {
-    background: #0f172a !important;
-    color: #f1f5f9 !important;
-    border: 1px solid #334155 !important;
-    border-radius: 8px !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
-}
-
-.leaflet-control-layers-toggle {
-    filter: invert(1);
-}
-
-/* Subtle animation pulses */
-@keyframes danger-glow {
-    0%, 100% {
-        box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
-    }
-}
-
-.pulse-hazard {
-    animation: danger-glow 2s infinite ease-in-out;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
