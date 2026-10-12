@@ -21,6 +21,8 @@ from gis_engine import get_gis_forest_zones
 from llm_advisor import generate_llm_incident_report, answer_wildfire_copilot_chat
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
 
 # Load trained models, scalers, and metadata
 MODELS_DIR = os.path.join(os.path.dirname(__file__), 'models')
